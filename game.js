@@ -4,6 +4,7 @@ var dataset = [];
 document.querySelector('#exec').addEventListener('click', function(){
     // 내부를 먼저 초기화
     tbody.innerHTML = '';
+    dataset = [];
     var hor = parseInt(document.querySelector('#hor').value);
     var ver = parseInt(document.querySelector('#ver').value);
     var mine = parseInt(document.querySelector('#mine').value);
@@ -57,6 +58,9 @@ document.querySelector('#exec').addEventListener('click', function(){
             var parenttbody = e.currentTarget.parentNode.parentNode;
             var colum = Array.prototype.indexOf.call(parentTr.children, e.currentTarget);
             var row = Array.prototype.indexOf.call(parenttbody.children, parentTr);
+
+            e.currentTarget.classList.add('opened');
+
             if(dataset[row][colum] === 'X'){
                 e.currentTarget.textContent = '펑!';
             } else {
@@ -68,9 +72,41 @@ document.querySelector('#exec').addEventListener('click', function(){
                     around = around.concat(dataset[row+1][colum-1], dataset[row+1][colum], dataset[row+1][colum+1]);
                 }
                 console.log(around);
-                e.currentTarget.textContent = around.filter(function(v){
+
+                var numberAroundMine = around.filter(function(v){
                     return v === 'X';
-                }).length;                      
+                }).length;   
+
+                e.currentTarget.textContent = numberAroundMine;
+
+                if(numberAroundMine === 0){
+                    // 주변 8칸 동시 오픈
+                    console.log('주변을 엽니다');
+                    var aroundColum = [];
+                    if(tbody.children[row-1]){
+                        aroundColum = aroundColum.concat([
+                            tbody.children[row-1].children[colum-1],
+                            tbody.children[row-1].children[colum],
+                            tbody.children[row-1].children[colum+1],
+                        ]);
+                    }
+
+                   aroundColum = aroundColum.concat([
+                        tbody.children[row].children[colum-1],
+                        tbody.children[row].children[colum+1],
+                    ]);
+
+                    if(tbody.children[row+1]){
+                      aroundColum =  aroundColum.concat([
+                            tbody.children[row+1].children[colum-1],
+                            tbody.children[row+1].children[colum],
+                            tbody.children[row+1].children[colum+1]
+                        ]);
+                    }
+                    aroundColum.filter((v) => !!v).forEach(function(nextColum){
+                        nextColum.click();
+                    });
+                }                   
             }
            });
            tr.appendChild(td);
@@ -88,14 +124,3 @@ document.querySelector('#exec').addEventListener('click', function(){
 });
 
 
-var name = 'zero';
-function log(){
-    console.log(name);
-}
-
-function wrapper(){
-    var name = 'nero';
-    log();
-}
-
-wrapper();
