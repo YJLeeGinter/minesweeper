@@ -27,7 +27,7 @@ document.querySelector('#exec').addEventListener('click', function(){
         var tr = document.createElement('tr');
         dataset.push(arr);
 
-        for(var j = 0; j < hor; j +=1){
+        for(var j = 0; j < hor; j +=1){  
            arr.push(1);
            var td = document.createElement('td');
            td.addEventListener('contextmenu', function(e){
@@ -60,15 +60,14 @@ document.querySelector('#exec').addEventListener('click', function(){
             if(dataset[row][colum] === 'X'){
                 e.currentTarget.textContent = '펑!';
             } else {
-                var around = [
-                dataset[row][colum-1],                         dataset[row][colum+1]
-            ];
+                var around = [dataset[row][colum-1],        dataset[row][colum+1]];
                 if(dataset[row-1]){
-                    around.concat(dataset[row-1][colum-1], dataset[row-1][colum], dataset[row-1][colum+1])
+                    around = around.concat(dataset[row-1][colum-1], dataset[row-1][colum], dataset[row-1][colum+1]);
                 }
                 if(dataset[row +1]){
-                    around.concat(                dataset[row+1][colum-1], dataset[row+1][colum], dataset[row+1][colum+1]                        )
+                    around = around.concat(dataset[row+1][colum-1], dataset[row+1][colum], dataset[row+1][colum+1]);
                 }
+                console.log(around);
                 e.currentTarget.textContent = around.filter(function(v){
                     return v === 'X';
                 }).length;                      
@@ -89,5 +88,14 @@ document.querySelector('#exec').addEventListener('click', function(){
 });
 
 
+var name = 'zero';
+function log(){
+    console.log(name);
+}
 
+function wrapper(){
+    var name = 'nero';
+    log();
+}
 
+wrapper();
